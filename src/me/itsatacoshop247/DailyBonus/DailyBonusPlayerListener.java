@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import com.nijiko.permissions.PermissionHandler;
@@ -33,22 +34,65 @@ public class DailyBonusPlayerListener extends PlayerListener{
 		plugin = instance;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
 		Player player = event.getPlayer();
 		addnewplayerfile(player);
-		String amount = Integer.toString(DailyBonusLoadSettings.amntonlogin);
-		if(CheckLastLogin(player)){
-        	if (iConomy.getBank().hasAccount(player.getName()) && hasPermission(player, "DailyBonus.get")) {	
+		String noniconamount = Integer.toString(DailyBonusLoadSettings.noniconomyitemamnt);
+		String VIPnoniconamount = Integer.toString(DailyBonusLoadSettings.VIPnoniconomyitemamnt);
+		String noniconitem = Integer.toString(DailyBonusLoadSettings.noniconomyitem);
+		String VIPnoniconitem = Integer.toString(DailyBonusLoadSettings.VIPnoniconomyitem);
+		//int time = (DailyBonusLoadSettings.waittime);
+		int randomnumber = 0;
+		if(!CheckLastLogin(player)){
+			return;
+			//ICONOMY VIP
+			/*if(time != 0){
+		        long t0, t1;
+		        t0 =  System.currentTimeMillis();
+		        do
+		        {
+		            t1 = System.currentTimeMillis();
+		        }
+		        while ((t1 - t0) < (time * 1000));
+		    }*/
+			/*} else if(!CheckLastLogin(player)){
+				return;*/
+			}
+		if(DailyBonusLoadSettings.IconomyAmountVariation != 0){
+			randomnumber = (int)(Math.random()*(DailyBonusLoadSettings.IconomyAmountVariation + DailyBonusLoadSettings.IconomyAmountVariation));
+			randomnumber -= DailyBonusLoadSettings.IconomyAmountVariation;
+		}
+		String amount = Integer.toString(DailyBonusLoadSettings.amntonlogin + randomnumber);
+		String VIPamount = Integer.toString(DailyBonusLoadSettings.VIPamntonlogin + randomnumber);
+        	if (DailyBonusLoadSettings.useicon && iConomy.getBank().hasAccount(player.getName()) && hasPermission(player, "DailyBonus.getVIP")) {	
 				Account account = iConomy.getBank().getAccount(player.getName());
 				double balance = account.getBalance();
-				balance +=DailyBonusLoadSettings.amntonlogin;
+				balance +=(DailyBonusLoadSettings.VIPamntonlogin + randomnumber);
+				account.setBalance(balance);
+				player.sendMessage(ChatColor.GOLD +DailyBonusLoadSettings.VIPmessage.replace("$amount$", VIPamount).replace("$currecny_name$", iConomy.getBank().getCurrency()));
+        	}//ICOMONY NO VIP
+        	else if (DailyBonusLoadSettings.useicon && iConomy.getBank().hasAccount(player.getName()) && hasPermission(player, "DailyBonus.get")) {	
+				Account account = iConomy.getBank().getAccount(player.getName());
+				double balance = account.getBalance();
+				balance +=(DailyBonusLoadSettings.amntonlogin + randomnumber);
 				account.setBalance(balance);
 				player.sendMessage(ChatColor.GOLD +DailyBonusLoadSettings.message.replace("$amount$", amount).replace("$currecny_name$", iConomy.getBank().getCurrency()));
-        	}
-		}
+        	}//NO ICONOMY VIP
+        	else if(!DailyBonusLoadSettings.useicon && hasPermission(player, "DailyBonus.getVIP")){
+	        	player.getInventory().addItem(new ItemStack(DailyBonusLoadSettings.VIPnoniconomyitem, DailyBonusLoadSettings.VIPnoniconomyitemamnt));
+	        	player.updateInventory();
+	        	player.sendMessage(ChatColor.GOLD +DailyBonusLoadSettings.VIPnoniconmessage.replace("$amount$", VIPnoniconamount).replace("$item$", VIPnoniconitem));
+        	}//NO ICONOMY NO VIP
+        	else if(!DailyBonusLoadSettings.useicon && hasPermission(player, "DailyBonus.getVIP")){
+	        	player.getInventory().addItem(new ItemStack(DailyBonusLoadSettings.noniconomyitem, DailyBonusLoadSettings.VIPnoniconomyitemamnt));
+	        	player.updateInventory();
+	        	player.sendMessage(ChatColor.GOLD +DailyBonusLoadSettings.noniconmessage.replace("$amount$", noniconamount).replace("$item$", noniconitem));
+        	}	
 }
 
+	@SuppressWarnings("deprecation")
 	private void addnewplayerfile(Player p) {
 		File file = new File ("plugins/DailyBonus/"+p.getName()+".txt");
 	    if (!file.exists()){
@@ -68,6 +112,41 @@ public class DailyBonusPlayerListener extends PlayerListener{
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
+	    int randomnumber = 0;
+		String noniconamount = Integer.toString(DailyBonusLoadSettings.noniconomyitemamnt);
+		String VIPnoniconamount = Integer.toString(DailyBonusLoadSettings.VIPnoniconomyitemamnt);
+		String noniconitem = Integer.toString(DailyBonusLoadSettings.noniconomyitem);
+		String VIPnoniconitem = Integer.toString(DailyBonusLoadSettings.VIPnoniconomyitem);
+		if(DailyBonusLoadSettings.IconomyAmountVariation != 0){
+			randomnumber = (int)(Math.random()*(DailyBonusLoadSettings.IconomyAmountVariation + DailyBonusLoadSettings.IconomyAmountVariation));
+			randomnumber -= DailyBonusLoadSettings.IconomyAmountVariation;
+		}
+		String amount = Integer.toString(DailyBonusLoadSettings.amntonlogin + randomnumber);
+		String VIPamount = Integer.toString(DailyBonusLoadSettings.VIPamntonlogin + randomnumber);
+        	if (DailyBonusLoadSettings.useicon && iConomy.getBank().hasAccount(p.getName()) && hasPermission(p, "DailyBonus.getVIP")) {	
+				Account account = iConomy.getBank().getAccount(p.getName());
+				double balance = account.getBalance();
+				balance +=(DailyBonusLoadSettings.VIPamntonlogin + randomnumber);
+				account.setBalance(balance);
+				p.sendMessage(ChatColor.GOLD +DailyBonusLoadSettings.VIPmessage.replace("$amount$", VIPamount).replace("$currecny_name$", iConomy.getBank().getCurrency()));
+        	}//ICOMONY NO VIP
+        	else if (DailyBonusLoadSettings.useicon && iConomy.getBank().hasAccount(p.getName()) && hasPermission(p, "DailyBonus.get")) {	
+				Account account = iConomy.getBank().getAccount(p.getName());
+				double balance = account.getBalance();
+				balance +=(DailyBonusLoadSettings.amntonlogin + randomnumber);
+				account.setBalance(balance);
+				p.sendMessage(ChatColor.GOLD +DailyBonusLoadSettings.message.replace("$amount$", amount).replace("$currecny_name$", iConomy.getBank().getCurrency()));
+        	}//NO ICONOMY VIP
+        	else if(!DailyBonusLoadSettings.useicon && hasPermission(p, "DailyBonus.getVIP")){
+	        	p.getInventory().addItem(new ItemStack(DailyBonusLoadSettings.VIPnoniconomyitem, DailyBonusLoadSettings.VIPnoniconomyitemamnt));
+	        	p.updateInventory();
+	        	p.sendMessage(ChatColor.GOLD +DailyBonusLoadSettings.VIPnoniconmessage.replace("$amount$", VIPnoniconamount).replace("$item$", VIPnoniconitem));
+        	}//NO ICONOMY NO VIP
+        	else if(!DailyBonusLoadSettings.useicon && hasPermission(p, "DailyBonus.getVIP")){
+	        	p.getInventory().addItem(new ItemStack(DailyBonusLoadSettings.noniconomyitem, DailyBonusLoadSettings.VIPnoniconomyitemamnt));
+	        	p.updateInventory();
+	        	p.sendMessage(ChatColor.GOLD +DailyBonusLoadSettings.noniconmessage.replace("$amount$", noniconamount).replace("$item$", noniconitem));
+        	}
 	    }
 	}
 

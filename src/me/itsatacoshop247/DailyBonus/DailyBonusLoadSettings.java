@@ -30,7 +30,7 @@ public class DailyBonusLoadSettings {
 			noniconomyitemamnt= properties.getInteger("NonIconomy_Item_Amount_to_give", 2);
 			VIPnoniconomyitem= properties.getInteger("VIP_NonIconomy_Item_to_give", 266);
 			VIPnoniconomyitemamnt= properties.getInteger("VIP_NonIconomy_Item_Amount_to_give", 1);
-			message = properties.getString("message", "You just got $amount$ $currecny_name$s for logging in today!");
+			message = properties.getString("message", "Du hast $amount$ Dollar für den heutigen Login bekommen.");
 			VIPmessage = properties.getString("VIPmessage", "Hey VIP, You just got $amount$ $currecny_name$s for logging in today!");
 			noniconmessage = properties.getString("NonIconomy_message", "You just got $amount$ $item$ for logging in today!");
 			VIPnoniconmessage = properties.getString("VIP_NonIconomy_message", "Hey VIP, You just got $amount$ $item$ for logging in today!");
